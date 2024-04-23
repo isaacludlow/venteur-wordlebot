@@ -1,20 +1,12 @@
 import { Typography } from "@mui/material";
 import GuessWordBoxRow from "./WordBoxes/GuessWordBoxRow";
-import ResponseWordBoxRow from "./WordBoxes/ResponseWordBoxRow1";
-import { useContext } from "react";
-import { GuessContext } from "../App";
+import ResponseWordBoxRow from "./WordBoxes/ResponseWordBoxRow";
 
 interface Props {
     guessIndex: number;
 }
 
 const Guess = ({ guessIndex }: Props) => {
-    const guessContext = useContext(GuessContext);
-
-    function handleOnCLick() {
-
-    };
-    
     return (
         <>
             <Typography variant="h4" gutterBottom>Guess #{guessIndex + 1}</Typography>

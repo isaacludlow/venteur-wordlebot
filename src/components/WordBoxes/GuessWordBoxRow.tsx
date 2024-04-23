@@ -18,7 +18,7 @@ const GuessWordBoxRow = ({ guessIndex }: Props) => {
     return (
         <div style={boxRow}>
             {currentGuess?.Letters.map(guessLetter => 
-                <Box sx={{ p: 2, border: '1px solid grey' }}>{guessLetter.Character.toUpperCase()}</Box>
+                <Box key={guessLetter.Character} sx={{ p: 2, border: '1px solid grey' }}>{guessLetter.Character.toUpperCase()}</Box>
             )}
         </div>
     );

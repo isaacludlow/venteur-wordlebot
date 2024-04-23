@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Container, Divider, Typography } from "@mui/material";
+import { CircularProgress, Container, Typography } from "@mui/material";
 import Layout from "./components/Layout";
 import Header from "./components/Header";
 import Guess from "./components/Guess";
@@ -95,7 +95,6 @@ function App() {
                         <Guess key={i} guessIndex={i}></Guess>
                     )}
                     <div style={{ display: "flex", justifyContent: "end" }}>
-                        {/* <Button variant="contained" loading={loading} onClick={handleOnClick}>Submit</Button> */}
                         <LoadingButton
                             onClick={handleOnClick}
                             loading={loading}

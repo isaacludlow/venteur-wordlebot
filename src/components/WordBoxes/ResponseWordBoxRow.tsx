@@ -42,7 +42,7 @@ const ResponseWordBoxRow = ({ guessIndex }: Props) => {
     return (
         <div style={boxRow}>
             {currentGuess?.Letters.map((letter, i) =>
-                <WordBox character={letter.Character} color={letter.Color} onClick={handleOnClick} />
+                <WordBox key={letter.Character} character={letter.Character} color={letter.Color} onClick={handleOnClick} />
             )}
         </div>
     );
