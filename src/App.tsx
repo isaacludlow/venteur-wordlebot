@@ -6,12 +6,12 @@ import { createContext, useEffect, useState } from "react";
 import { WordleRequestItem, fetchWordleResult } from "./api/api";
 import { LoadingButton } from "@mui/lab";
 
-interface GuessContext {
-    guessState: Guess[];
-    setGuessState: React.Dispatch<React.SetStateAction<Guess[]>>;
+interface GuessContextType {
+    guessState: GuessData[];
+    setGuessState: React.Dispatch<React.SetStateAction<GuessData[]>>;
 }
 
-interface Guess {
+interface GuessData {
     Letters: Letter[];
 }
 
@@ -20,11 +20,11 @@ interface Letter {
     Color: string;
 }
 
-export const GuessContext = createContext<GuessContext | null>(null);
+export const GuessContext = createContext<GuessContextType | null>(null);
 
 function App() {
     const [guessResponseHistory, setGuessResponseHistory] = useState<WordleRequestItem[]>([]);
-    const [guessState, setGuessState] = useState<Guess[]>([]);
+    const [guessState, setGuessState] = useState<GuessData[]>([]);
     const [loadingPage, setLoadingPage] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -33,20 +33,24 @@ function App() {
             fetchWordleResult(guessResponseHistory).then(response => {
             const nextGuessArray = response.guess.split('');
 
-            const nextGuess: Guess = {
+            const nextGuess: GuessData = {
                 Letters: nextGuessArray.map(character => {
                     return { Character: character, Color: 'white' };
                 })
             };
             setGuessState([...guessState, nextGuess ]);
             setLoadingPage(false);
+            setLoading(false);
         })
         .catch(error => {
             setError(error);
             setLoading(false);
         });
-
-    }, [])
+        // Added this because I was getting a linting warning wanting me to add guessState as a dependency.
+        // Maybe I just need to refactor in order to have a better design, but it seems like my current set up works fine and
+        // doesn't have anything that would shoot me in the foot or be considered bad practice.
+    // eslint-disable-next-line
+    }, [guessResponseHistory])
 
     async function handleOnClick() {
         setLoading(true);
@@ -54,7 +58,7 @@ function App() {
         const charactersInString = currentGuess?.Letters.map(letter => letter.Character).join('');
         const cluesInString = currentGuess?.Letters.map(letter => {
             var firstCharacterOfColor = letter.Color.charAt(0);
-            return firstCharacterOfColor === 'w' ? 'b' : firstCharacterOfColor;
+            return firstCharacterOfColor === 'w' ? 'x' : firstCharacterOfColor;
         }).join('');
 
         if (charactersInString != null && cluesInString != null) {
@@ -65,23 +69,6 @@ function App() {
             
             const updatedGuessResponseHistory = [...guessResponseHistory, request];
             setGuessResponseHistory(updatedGuessResponseHistory);
-            
-            try {
-                const response = await fetchWordleResult(updatedGuessResponseHistory);
-                const nextGuessArray = response.guess.split('');
-    
-                const nextGuess: Guess = {
-                    Letters: nextGuessArray.map(character => {
-                        return { Character: character, Color: 'white' };
-                    })
-                };
-                setGuessState([...guessState, nextGuess ]);
-                setLoading(false);
-            } catch (error) {
-                console.log(error)
-                setError((error as Error));
-                setLoading(false);
-            }
         }
     }
 
